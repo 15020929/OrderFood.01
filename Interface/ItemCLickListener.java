@@ -7,5 +7,5 @@ import android.view.View;
  */
 //We net click to Recycler View item -> start new activity with details of menu, so need implement Onclick and ViewHolder to push it
 public interface ItemCLickListener {
-    void onClick(View view, int possition, boolean isLongCLick);
+    void onClick(View view, int position, boolean isLongCLick);
 }

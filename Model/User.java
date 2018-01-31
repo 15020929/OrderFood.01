@@ -8,15 +8,23 @@ public class User {
 
     private String name;
     private String password;
+    private String phone;
 
     public User() {
     }
 
     public User(String Pname, String Ppassword) {
 
-
         name = Pname;
         password = Ppassword;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String Pphone) {
+        this.phone = Pphone;
     }
 
     public String setname(String Pname) {

@@ -1,5 +1,6 @@
 package com.example.xuan.orderfood;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,7 +30,6 @@ import com.squareup.picasso.Picasso;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
     FirebaseDatabase database;
     DatabaseReference category;
     TextView txtHomeFullName;
@@ -38,6 +38,7 @@ public class Home extends AppCompatActivity
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
+    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,8 @@ public class Home extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
             }
         });
 
@@ -87,15 +88,14 @@ public class Home extends AppCompatActivity
         loadMenu();
     }
 
-    //Thuc hien load menu
+    //Load menu
 
     public void loadMenu() {
 
-        FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter
-                = new FirebaseRecyclerAdapter<Category, MenuViewHolder>
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>
                 (Category.class, R.layout.menu_item, MenuViewHolder.class, category) {
             @Override
-            protected void populateViewHolder(MenuViewHolder viewHolder, Category model, int position) {
+            protected void populateViewHolder(MenuViewHolder viewHolder, Category model, final int position) {
                 viewHolder.txtMenuName.setText(model.getName());
                 Picasso.with(getBaseContext())
                         .load(model.getImage()).into(viewHolder.imageView);
@@ -104,8 +104,12 @@ public class Home extends AppCompatActivity
 
                 viewHolder.setItemCLickListener(new ItemCLickListener() {
                     @Override
-                    public void onClick(View view, int possition, boolean isLongCLick) {
-                        Toast.makeText(Home.this, "" + clickItem.getName(), Toast.LENGTH_SHORT).show();
+                    public void onClick(View view, int position, boolean isLongCLick) {
+                        //Get categoryid and send  to new Activity
+                        Intent foodList = new Intent(Home.this, Foodlist.class);
+                        //Cause Category id is key, just get  key of this item and send to new activity
+                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
+                        startActivity(foodList);
                     }
                 });
 
